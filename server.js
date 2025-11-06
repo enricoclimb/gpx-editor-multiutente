@@ -1,11 +1,22 @@
 const express = require('express');
+const path = require("path");
 const http = require('http');
 const { Server } = require('socket.io');
 const { Pool } = require('pg');
 const cors = require('cors');
+const path = require("path");
 
 const app = express();
 app.use(cors());
+
+const __dirname = path.resolve();
+
+// Serve il frontend buildato
+app.use(express.static(path.join(__dirname, "client", "dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+});
 
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
